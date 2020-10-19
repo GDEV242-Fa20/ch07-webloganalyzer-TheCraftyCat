@@ -12,6 +12,11 @@ public class LogAnalyzer
     private int[] hourCounts;
     // Use a LogfileReader to access the data.
     private LogfileReader reader;
+    
+    // Additions needed for exercise 7.19:
+    private int[] dayCounts;
+    private int[] monthCounts;
+    private int[] yearCounts;
 
     /**
      * Create an object to analyze hourly web accesses.
@@ -28,6 +33,10 @@ public class LogAnalyzer
         hourCounts = new int[24];
         // Create the reader to obtain the data.
         reader = new LogfileReader(filename);
+        
+        // Additions needed for exercise 7.19:
+        dayCounts = new int[32];
+        monthCounts = new int[13];
     }
 
     /**
@@ -39,6 +48,32 @@ public class LogAnalyzer
             LogEntry entry = reader.next();
             int hour = entry.getHour();
             hourCounts[hour]++;
+        }
+    }
+    
+    /**
+     * Analyze the daily access data from the log file.
+     */
+    public void analyzeDailyData()
+    {
+        while(reader.hasNext()) 
+        {
+            LogEntry entry = reader.next();
+            int day = entry.getDay();
+            dayCounts[day]++;
+        }
+    }
+    
+    /**
+     * Analyze the monthly access data from the log file.
+     */
+    public void analyzeMonthlyData()
+    {
+        while(reader.hasNext()) 
+        {
+            LogEntry entry = reader.next();
+            int month = entry.getMonth();
+            monthCounts[month]++;
         }
     }
 
@@ -169,5 +204,138 @@ public class LogAnalyzer
         }
         
         return busiestTwoHour;
+    }
+    
+    /**
+     * Print the daily counts.
+     * These should have been set with a prior
+     * call to analyzeDailyData.
+     */
+    public void printDailyCounts()
+    {
+        System.out.println("Day: Count");
+        for(int day = 1; day < dayCounts.length; day++) {
+            System.out.println(day + ": " + dayCounts[day]);
+        }
+    }
+    
+    /**
+     * Return the number of the busiest day.
+     * This method relies on a prior call to analyzeDailyData.
+     * 
+     * @return busiestDay The number of the busiest day.
+     * 
+     * This satisfies exercise 7.19.
+     */
+    public int busiestDay()
+    {
+        int busiestDay = 0;
+        for(int day = 0; day < dayCounts.length; day++)
+        {
+            if (dayCounts[day] > dayCounts[busiestDay])
+            {
+                busiestDay = day;
+            }
+        }
+        
+        return busiestDay;
+    }
+    
+    /**
+     * Return the number of the questest day.
+     * This method relies on a prior call to analyzeDailyData.
+     * 
+     * @return quietestDay The number of the quietest day.
+     * 
+     * This satisfies exercise 7.19.
+     */
+    public int quietestDay()
+    {
+        int quietestDay = 0;
+        for(int day = 0; day < dayCounts.length; day++)
+        {
+            if (dayCounts[day] < dayCounts[quietestDay])
+            {
+                quietestDay = day;
+            }
+        }
+        
+        return quietestDay;
+    }
+    
+    /**
+     * Return the number of monthly accesses recorded in the log file.
+     * @return totalByMonth An array of the total number of accesses 
+     * recorded in the log file, by month.
+     * 
+     * This satisfies exercise 7.19.
+     */
+    public int[] totalAccessesPerMonth()
+    {
+        int[] totalByMonth = new int[monthCounts.length];
+        // Add the value for each month to the array
+        for(int month = 0; month < totalByMonth.length; month++)
+        {
+            totalByMonth[month] += monthCounts[month];
+        }
+        
+        return totalByMonth;
+    }
+    
+    /**
+     * Return the number of the busiest month.
+     * This method relies on a prior call to analyzeMonthlyData.
+     * 
+     * @return busiestMonth The number of the busiest month.
+     * 
+     * This satisfies exercise 7.19.
+     */
+    public int busiestMonth()
+    {
+        int busiestMonth = 0;
+        for(int month = 0; month < monthCounts.length; month++)
+        {
+            if (monthCounts[month] > monthCounts[busiestMonth])
+            {
+                busiestMonth = month;
+            }
+        }
+        
+        return busiestMonth;
+    }
+    
+    /**
+     * Return the number of the questest month.
+     * This method relies on a prior call to analyzeMonthlyData.
+     * 
+     * @return quietestMonth The number of the quietest month.
+     * 
+     * This satisfies exercise 7.19.
+     */
+    public int quietestMonth()
+    {
+        int quietestMonth = 0;
+        for(int month = 0; month < monthCounts.length; month++)
+        {
+            if (monthCounts[month] < monthCounts[quietestMonth])
+            {
+                quietestMonth = month;
+            }
+        }
+        
+        return quietestMonth;
+    }
+    
+    /**
+     * Print the monthly counts.
+     * These should have been set with a prior
+     * call to analyzeMonthlyData.
+     */
+    public void printMonthlyCounts()
+    {
+        System.out.println("Month: Count");
+        for(int month = 1; month < monthCounts.length; month++) {
+            System.out.println(month + ": " + monthCounts[month]);
+        }
     }
 }
